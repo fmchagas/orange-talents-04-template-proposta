@@ -28,7 +28,7 @@ public class NovaPropostaRequest {
 	private BigDecimal salario;
 
 	public NovaPropostaRequest(@NotBlank String documento, @NotBlank @Email String email, @NotBlank String nome,
-			@NotBlank String endereco, @Positive BigDecimal salario) {
+			@NotBlank String endereco,@NotNull @Positive BigDecimal salario) {
 		this.documento = limpar(documento);
 		this.email = email;
 		this.nome = nome.trim();
@@ -36,9 +36,12 @@ public class NovaPropostaRequest {
 		this.salario = salario;
 	}
 	
+	public Proposta converteParaModelo() {
+		return new Proposta(documento, email, nome, endereco, salario);
+	}
+	
 	
 	private String limpar(String valor) {
 		return valor.replaceAll("[^0-9]+", "");
 	}
-	
 }
