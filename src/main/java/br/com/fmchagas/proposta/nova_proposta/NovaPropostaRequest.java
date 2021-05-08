@@ -44,4 +44,8 @@ public class NovaPropostaRequest {
 	private String limpar(String valor) {
 		return valor.replaceAll("[^0-9]+", "");
 	}
+
+	public String getDocumento() {
+		return documento;
+	}
 }
