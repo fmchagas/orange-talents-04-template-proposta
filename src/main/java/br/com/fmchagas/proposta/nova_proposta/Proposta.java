@@ -4,6 +4,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 
 import java.math.BigDecimal;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -21,10 +22,19 @@ public class Proposta {
 	@GeneratedValue(strategy = IDENTITY)
 	private Long id;
 	
+	@Column(length = 14, unique = true, nullable = false)
 	private @NotBlank String documento;
+	
+	@Column(nullable = false)
 	private @NotBlank @Email String email;
+	
+	@Column(nullable = false)
 	private @NotBlank String nome;
+	
+	@Column(nullable = false)
 	private @NotBlank String endereco;
+	
+	@Column(nullable = false)
 	private @NotNull @Positive BigDecimal salario;
 	
 	/**
