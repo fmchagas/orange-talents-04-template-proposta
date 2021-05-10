@@ -6,6 +6,8 @@ import java.math.BigDecimal;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.validation.constraints.Email;
@@ -37,6 +39,10 @@ public class Proposta {
 	@Column(nullable = false)
 	private @NotNull @Positive BigDecimal salario;
 	
+	@Enumerated(EnumType.STRING)
+	@Column(length = 12)
+	private Elegibilidade elegibilidade ;
+	
 	/**
 	 * @Deprecated - único para hibernate
 	 */
@@ -55,5 +61,17 @@ public class Proposta {
 
 	public Long getId() {
 		return id;
+	}
+	
+	public String getDocumento() {
+		return documento;
+	}
+	
+	public String getNome() {
+		return nome;
+	}
+	
+	public void setElegibilidade(Elegibilidade elegibilidade) {
+		this.elegibilidade = elegibilidade;
 	}
 }
