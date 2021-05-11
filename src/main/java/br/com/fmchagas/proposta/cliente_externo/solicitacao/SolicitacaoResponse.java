@@ -12,12 +12,15 @@ public class SolicitacaoResponse {
 	public String getDocumento() {
 		return documento;
 	}
+	
 	public String getNome() {
 		return nome;
 	}
+	
 	public Integer getIdProposta() {
 		return idProposta;
 	}
+	
 	public RestrincaoSolicitacao getResultadoSolicitacao() {
 		return resultadoSolicitacao;
 	}

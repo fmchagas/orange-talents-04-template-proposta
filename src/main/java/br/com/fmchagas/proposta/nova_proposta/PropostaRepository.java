@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PropostaRepository extends CrudRepository<Proposta, Long>{
 
-	int countByDocumento(String documento);
+	boolean existsByDocumento(String documento);
 }

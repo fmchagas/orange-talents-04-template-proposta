@@ -8,6 +8,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,9 +38,9 @@ public class PropostaController {
 	@PostMapping("/api/propostas")
 	@Transactional
 	public ResponseEntity<?> cadastrar(@RequestBody @Valid NovaPropostaRequest request, UriComponentsBuilder uriBuilder) {
-		int contaProposta = propostaRepository.countByDocumento(request.getDocumento());
+		boolean existeProposta = propostaRepository.existsByDocumento(request.getDocumento());
 		
-		if(contaProposta > 0) {
+		if(existeProposta) {
 			throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Desculpe o transtorno, encontramos o documento cadastrado em nosso sistema");
 		}
 		
@@ -76,7 +77,8 @@ public class PropostaController {
 				
 				proposta.setElegibilidade(resultadoSolicitacao.paraElegibilidade());
 			} catch (JsonProcessingException ex) {
-				ex.printStackTrace();
+				Assert.state(ex==null, "Algum problema aconteceu quando tentavamos converte o Json para Objeto! Mensagem da exception: "
+								+ ex.getMessage());
 			}
 		}
 	}
