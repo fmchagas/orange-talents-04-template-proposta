@@ -27,37 +27,46 @@ class PropostaRepositoryTest {
 	
 	
 	@Test
-	void deveSalvarProposta() {
+	void deveSalvarProposta_QuandoNaoTiverElegibilidade() {
 		Proposta proposta = criarProposta();
 		
 		Proposta propostaSalva = propostaRepository.save(proposta);
 		assertNotNull(propostaSalva);
 	}
+	
+	@Test
+	void deveAtualizarProposta_QuandoTiverElegibilidade() {
+		Proposta proposta = criarProposta();
+		proposta.setElegibilidade(Elegibilidade.ELEGIVEL);
+		
+		proposta = propostaRepository.save(proposta);
+		assertNotNull(proposta);
+	}
 
 	
 	@Test
-	void deveRetornarUm_QuandoExistirPropostaCadastradaComMemsmoDocumento() {
+	void deveRetornarTrue_QuandoExistirPropostaCadastradaComMesmoDocumento() {
 		String documento = "89005604093";
 		
 		Proposta proposta = criarProposta();
 		propostaRepository.save(proposta);
 		
-		int countaDocumento = propostaRepository.countByDocumento(documento);
+		boolean existeDocumento = propostaRepository.existsByDocumento(documento);
 
-		assertEquals(1, countaDocumento);
+		assertEquals(true, existeDocumento);
 	}
 	
 	@Test
-	void deveRetornarZero_QuandoNaoExistirPropostaCadastradaComDocumento() {
+	void deveRetornarFalse_QuandoNaoExistirPropostaCadastradaComDocumento() {
 		String documento = "89005604093";
 		
-		int countaDocumento = propostaRepository.countByDocumento(documento);
+		boolean naoExisteDocumento = propostaRepository.existsByDocumento(documento);
 
-		assertEquals(0, countaDocumento);
+		assertEquals(false, naoExisteDocumento);
 	}
 	
 	@Test
-	void deveDarErroDeIntegridade_QuandoCadastrarPropostaComMemsmoDocumento() {	
+	void deveDarErroDeIntegridade_QuandoCadastrarPropostaComMesmoDocumento() {	
 		assertThrows(DataIntegrityViolationException.class, ()->{
 			propostaRepository.save(criarProposta());
 			propostaRepository.save(criarProposta());
