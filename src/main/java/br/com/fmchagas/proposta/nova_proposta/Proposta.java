@@ -88,4 +88,16 @@ public class Proposta {
 	public String getNome() {
 		return nome;
 	}
+	
+	public Elegibilidade getElegibilidade() {
+		return elegibilidade;
+	}
+	
+	public String getEmail() {
+		return email;
+	}
+	
+	public String getEndereco() {
+		return endereco;
+	}
 }
