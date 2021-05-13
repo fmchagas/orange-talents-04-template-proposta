@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import br.com.fmchagas.proposta.cliente_externo.cartao.CartaoCliente;
 import br.com.fmchagas.proposta.cliente_externo.cartao.CartaoResponse;
+import br.com.fmchagas.proposta.compartilhado.utils.SimplesOfuscador;
 import br.com.fmchagas.proposta.nova_proposta.Proposta;
 import br.com.fmchagas.proposta.nova_proposta.PropostaRepository;
 import feign.FeignException;
@@ -49,7 +50,7 @@ public class AssociaCartaoSchedule {
 				cartaoRepository.save(cartao);
 				propostaRepository.save(proposta);
 				
-				logger.info("Cartão {} associado a proposta {}",cartao.getNumero().substring(0, 9) ,proposta.getId());
+				logger.info("Cartão {} associado a proposta {}", SimplesOfuscador.ofuscar(cartao.getNumero()) ,proposta.getId());
 			} catch (FeignException ex) {
 				logger.info("Não encontramos cartão para proposta {}", proposta.getId());
 			}
