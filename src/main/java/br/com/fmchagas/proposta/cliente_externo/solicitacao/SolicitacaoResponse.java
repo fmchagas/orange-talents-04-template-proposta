@@ -8,21 +8,16 @@ public class SolicitacaoResponse {
 	private RestrincaoSolicitacao resultadoSolicitacao;
 	private Integer idProposta;
 	
-	
-	public String getDocumento() {
-		return documento;
-	}
-	
-	public String getNome() {
-		return nome;
-	}
-	
-	public Integer getIdProposta() {
-		return idProposta;
-	}
-	
-	public RestrincaoSolicitacao getResultadoSolicitacao() {
-		return resultadoSolicitacao;
+	public SolicitacaoResponse(
+			String documento,
+			String nome,
+			RestrincaoSolicitacao resultadoSolicitacao,
+			Integer idProposta) {
+		
+		this.documento = documento;
+		this.nome = nome;
+		this.resultadoSolicitacao = resultadoSolicitacao;
+		this.idProposta = idProposta;
 	}
 	
 	public Elegibilidade paraElegibilidade() {
