@@ -18,25 +18,24 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import br.com.fmchagas.proposta.cliente_externo.solicitacao.Solicitacao;
-import br.com.fmchagas.proposta.cliente_externo.solicitacao.SolicitacaoRequest;
-import br.com.fmchagas.proposta.cliente_externo.solicitacao.SolicitacaoResponse;
+import br.com.fmchagas.proposta.cliente_externo.solicitacao.SolicitacaoCliente;
+import br.com.fmchagas.proposta.cliente_externo.solicitacao.SolicitacaoClienteRequest;
+import br.com.fmchagas.proposta.cliente_externo.solicitacao.SolicitacaoClienteResponse;
 import feign.FeignException;
 
 @RestController
-public class PropostaController {
+public class NovaPropostaController {
 	
 	private PropostaRepository propostaRepository;
-	private Solicitacao solicitacao;
+	private SolicitacaoCliente solicitacao;
 	
 	@Autowired
-	public PropostaController(PropostaRepository propostaRepository, Solicitacao solicitacao) {
+	public NovaPropostaController(PropostaRepository propostaRepository, SolicitacaoCliente solicitacao) {
 		this.propostaRepository = propostaRepository;
 		this.solicitacao = solicitacao;
 	}
 	
 	@PostMapping("/api/propostas")
-	@Transactional
 	public ResponseEntity<?> cadastrar(@RequestBody @Valid NovaPropostaRequest request, UriComponentsBuilder uriBuilder) {
 		boolean existeProposta = propostaRepository.existsByDocumento(request.getDocumento());
 		
@@ -45,24 +44,29 @@ public class PropostaController {
 		}
 		
 		Proposta proposta = request.converteParaModelo();
-		propostaRepository.save(proposta);
+		salvaEComita(proposta);
 		
 		atribuiElegibilidadePara(proposta);
 		
-		propostaRepository.save(proposta);
+		salvaEComita(proposta);
 		
 		URI uri = uriBuilder.path("/propostas/{id}").buildAndExpand(proposta.getId()).toUri();
 		
 		return ResponseEntity.created(uri).build();
 	}
+	
+	@Transactional
+	private void salvaEComita(Proposta proposta) {
+		propostaRepository.save(proposta);
+	}
 
 	
 	private void atribuiElegibilidadePara(Proposta proposta) {
-		SolicitacaoResponse resultadoSolicitacao;
+		SolicitacaoClienteResponse resultadoSolicitacao;
 		
 		try {
 			resultadoSolicitacao = solicitacao.consultaViaHttp(
-						new SolicitacaoRequest(proposta.getDocumento(),
+						new SolicitacaoClienteRequest(proposta.getDocumento(),
 								proposta.getNome(),
 								proposta.getId()));
 			
@@ -73,7 +77,7 @@ public class PropostaController {
 				/*
 				 * Converte Json para Objeto
 				 */
-				resultadoSolicitacao = new ObjectMapper().readValue(e.contentUTF8(), SolicitacaoResponse.class);
+				resultadoSolicitacao = new ObjectMapper().readValue(e.contentUTF8(), SolicitacaoClienteResponse.class);
 				
 				proposta.setElegibilidade(resultadoSolicitacao.paraElegibilidade());
 			} catch (JsonProcessingException ex) {

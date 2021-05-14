@@ -1,28 +1,35 @@
 package br.com.fmchagas.proposta.nova_proposta;
 
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.stubbing.OngoingStubbing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 
 import br.com.fmchagas.proposta.cliente_externo.solicitacao.RestrincaoSolicitacao;
-import br.com.fmchagas.proposta.cliente_externo.solicitacao.Solicitacao;
-import br.com.fmchagas.proposta.cliente_externo.solicitacao.SolicitacaoRequest;
-import br.com.fmchagas.proposta.cliente_externo.solicitacao.SolicitacaoResponse;;
+import br.com.fmchagas.proposta.cliente_externo.solicitacao.SolicitacaoCliente;
+import br.com.fmchagas.proposta.cliente_externo.solicitacao.SolicitacaoClienteRequest;
+import br.com.fmchagas.proposta.cliente_externo.solicitacao.SolicitacaoClienteResponse;;
 
 @ExtendWith(SpringExtension.class) // dizer ao JUnit 5 para ativar o suporte ao Spring
-@WebMvcTest(controllers = PropostaController.class) // restringir o contexto do app criado para unico bean debcontrolador
-class PropostaControllerTest {
+@WebMvcTest(controllers = NovaPropostaController.class) // restringir o contexto do app criado para unico bean debcontrolador
+class NovaPropostaControllerTest {
 
 	/*
 	 * @MockBean - substitui automaticamente o bean do mesmo tipo no contexto do app
@@ -31,7 +38,7 @@ class PropostaControllerTest {
 	@MockBean
 	private PropostaRepository propostaRepository;
 	@MockBean
-	private Solicitacao solicitacaoCliente;
+	private SolicitacaoCliente solicitacaoCliente;
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -75,22 +82,21 @@ class PropostaControllerTest {
 	}
 	
 	/*
-	 * Ainda não sei como testar quando temos um método privado do controller
-	 * quando fazer chamda para método da null pointer exception
-	 * ou então o null pointer é pq não consegui dizer ao mock como passar uma proposta como parametro do método
+	 * Ainda não consigo testar quando temos um método privado do controller fazendo chamada no feign
+	 * e pegando resutando do response para attribuir da null pointer exception
 	 */
 	
 	@Test
-	void deveRetornar201_QuadoPropostaForValida() {		
+	void deveRetornar201_QuadoPropostaForValida(){		
 		Proposta proposta = new Proposta("60178303000120", "email@gmail.com", "Dunha", "Rua a", BigDecimal.TEN);
-		proposta.setElegibilidade(Elegibilidade.ELEGIVEL);
+		SolicitacaoClienteRequest solicitacaoRequest = new SolicitacaoClienteRequest("60178303000120", "Dunha", 1L);
+		SolicitacaoClienteResponse solicitacaoResponse = new SolicitacaoClienteResponse("60178303000120", "Dunha", RestrincaoSolicitacao.SEM_RESTRICAO, 1);
+		
 		
 		when(propostaRepository.existsByDocumento("60178303000120")).thenReturn(false);
 		
-		when(solicitacaoCliente.consultaViaHttp(
-				new SolicitacaoRequest(proposta.getDocumento(), proposta.getNome(), 1L))
-			)
-		.thenReturn(new SolicitacaoResponse("60178303000120", "dunha", RestrincaoSolicitacao.SEM_RESTRICAO, 1));
+		when(solicitacaoCliente.consultaViaHttp(solicitacaoRequest))
+		.thenReturn(solicitacaoResponse);
 		
 		when(propostaRepository.save(proposta)).thenReturn(proposta);
 

@@ -7,7 +7,7 @@ import javax.validation.constraints.NotNull;
 
 import br.com.fmchagas.proposta.cartao.Cartao;
 
-public class CartaoResponse {
+public class CartaoClienteResponse {
 	
 	/*
 	 * id é número do cartão retornando pela API
@@ -16,7 +16,7 @@ public class CartaoResponse {
 	
 	private @NotNull LocalDateTime emitidoEm;
 
-	public CartaoResponse(@NotBlank String id, @NotNull LocalDateTime emitidoEm) {
+	public CartaoClienteResponse(@NotBlank String id, @NotNull LocalDateTime emitidoEm) {
 		this.id = id;
 		this.emitidoEm = emitidoEm;
 	}

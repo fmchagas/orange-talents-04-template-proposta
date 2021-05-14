@@ -8,5 +8,5 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface CartaoCliente {
 	
 	@GetMapping
-	CartaoResponse consultaViaHttp(@RequestParam("idProposta") Long idProposta);
+	CartaoClienteResponse consultaViaHttp(@RequestParam("idProposta") Long idProposta);
 }

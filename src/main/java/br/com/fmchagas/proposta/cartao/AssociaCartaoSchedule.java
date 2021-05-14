@@ -10,7 +10,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import br.com.fmchagas.proposta.cliente_externo.cartao.CartaoCliente;
-import br.com.fmchagas.proposta.cliente_externo.cartao.CartaoResponse;
+import br.com.fmchagas.proposta.cliente_externo.cartao.CartaoClienteResponse;
 import br.com.fmchagas.proposta.compartilhado.utils.SimplesOfuscador;
 import br.com.fmchagas.proposta.nova_proposta.Proposta;
 import br.com.fmchagas.proposta.nova_proposta.PropostaRepository;
@@ -41,7 +41,7 @@ public class AssociaCartaoSchedule {
 		
 		propostas.forEach(proposta -> {
 			try {
-				CartaoResponse cartaoResponse = cartao.consultaViaHttp(proposta.getId());
+				CartaoClienteResponse cartaoResponse = cartao.consultaViaHttp(proposta.getId());
 				
 				Cartao cartao = cartaoResponse.paraModelo();
 				

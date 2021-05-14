@@ -3,7 +3,7 @@ package br.com.fmchagas.proposta.cliente_externo.solicitacao;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-public class SolicitacaoRequest {
+public class SolicitacaoClienteRequest {
 	
 	@NotBlank
 	private String documento;
@@ -12,7 +12,7 @@ public class SolicitacaoRequest {
 	@NotNull
 	private Long idProposta;
 	
-	public SolicitacaoRequest(@NotBlank String documento, String nome, Long idProposta) {
+	public SolicitacaoClienteRequest(@NotBlank String documento, @NotBlank String nome, @NotNull Long idProposta) {
 		this.documento = documento;
 		this.nome = nome;
 		this.idProposta = idProposta;

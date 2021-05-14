@@ -5,8 +5,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @FeignClient(name = "http-solicitacao", url = "${proposta.solicitacao.url}" )
-public interface Solicitacao {
+public interface SolicitacaoCliente {
 	
 	@PostMapping("/api/solicitacao")
-	SolicitacaoResponse consultaViaHttp(@RequestBody SolicitacaoRequest request);
+	SolicitacaoClienteResponse consultaViaHttp(@RequestBody SolicitacaoClienteRequest request);
 }
