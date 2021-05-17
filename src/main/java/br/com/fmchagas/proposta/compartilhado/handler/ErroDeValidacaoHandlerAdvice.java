@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -21,9 +22,15 @@ public class ErroDeValidacaoHandlerAdvice {
         Collection<String> mensagens = new ArrayList<>();
         BindingResult bindingResult = methodArgumentNotValidException.getBindingResult();
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();
+        List<ObjectError> globalErrors = bindingResult.getGlobalErrors();
         
         fieldErrors.forEach(fieldError -> {
             String message = String.format("Campo %s %s", fieldError.getField(), fieldError.getDefaultMessage());
+            mensagens.add(message);
+        });
+        
+        globalErrors.forEach(globalError -> {
+            String message = String.format("Campo %s %s", globalError.getCode(), globalError.getDefaultMessage());
             mensagens.add(message);
         });
 
@@ -39,4 +46,5 @@ public class ErroDeValidacaoHandlerAdvice {
         ErroPadronizadoResponse erroPadronizado = new ErroPadronizadoResponse(mensagens);
 		return ResponseEntity.status(responseStatusException.getStatus()).body(erroPadronizado);
 	}
+    
 }
