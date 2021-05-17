@@ -2,11 +2,10 @@ package br.com.fmchagas.proposta.biometria;
 
 import java.util.Base64;
 
-import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-@Component
+
 public class FingerPrintTemBase64Validator implements Validator {
 
 	@Override

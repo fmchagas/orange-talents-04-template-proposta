@@ -26,21 +26,18 @@ public class NovaBiometriaController {
 	
 	private CartaoRepository cartaoRepository;
 	private BiometriaRepository biometriaRepository;
-	private FingerPrintTemBase64Validator fingerPrintValidator;
 
 	@Autowired
 	public NovaBiometriaController(CartaoRepository cartaoRepository,
-			BiometriaRepository biometriaRepository,
-			FingerPrintTemBase64Validator fingerPrintValidator) {
+			BiometriaRepository biometriaRepository) {
 		
 		this.cartaoRepository = cartaoRepository;
 		this.biometriaRepository = biometriaRepository;
-		this.fingerPrintValidator = fingerPrintValidator;
 	}
 	
 	@InitBinder
 	public void init(WebDataBinder binder) {
-		binder.addValidators(fingerPrintValidator);
+		binder.addValidators(new FingerPrintTemBase64Validator());
 	}
 	
 	@PostMapping("api/cartoes/{id}/biometria")
