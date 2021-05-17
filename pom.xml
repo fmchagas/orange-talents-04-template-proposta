@@ -13,9 +13,10 @@
 	<artifactId>desafio_proposta</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>desafio_proposta</name>
-	<description>Projeto para atender as funcionalidades da Proposta</description>
+	<description>Projeto para atender as funcionalidades da proposta de cartão</description>
 	<properties>
 		<java.version>11</java.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<spring-cloud.version>Hoxton.SR9</spring-cloud.version>
 	</properties>
 	<dependencies>
@@ -79,15 +80,6 @@
 		</dependency>
 	</dependencies>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
-	
 	<!-- OpenFeign -->
 	<dependencyManagement>
 		<dependencies>
@@ -100,4 +92,20 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
+	
+	<!-- Build -->
+	<build>
+		<finalName>proposta</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+			</plugin>
+		</plugins>
+	</build>
 </project>
