@@ -14,16 +14,22 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import br.com.fmchagas.proposta.metricas.ContadorDeProposta;
+
 @RestController //total 5 pts
 public class NovaPropostaController {
 	
 	private PropostaRepository propostaRepository;
 	private ElegibilidadeNovaProposta elegibilidade;
+	private ContadorDeProposta metrica;
 	
 	@Autowired
-	public NovaPropostaController(PropostaRepository propostaRepository, ElegibilidadeNovaProposta elegibilidade) {
+	public NovaPropostaController(PropostaRepository propostaRepository, 
+			ElegibilidadeNovaProposta elegibilidade,
+			ContadorDeProposta metrica) {
 		this.propostaRepository = propostaRepository;
 		this.elegibilidade = elegibilidade;
+		this.metrica = metrica;
 	}
 	
 	@PostMapping("/api/propostas")
@@ -41,6 +47,8 @@ public class NovaPropostaController {
 		elegibilidade.atribuirPara(proposta);
 		
 		salvaECommit(proposta);
+		
+		metrica.conta(proposta);
 		
 		URI uri = uriBuilder.path("/propostas/{id}").buildAndExpand(proposta.getId()).toUri();
 		
