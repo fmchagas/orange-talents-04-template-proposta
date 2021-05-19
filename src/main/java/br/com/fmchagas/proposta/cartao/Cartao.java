@@ -6,6 +6,8 @@ import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
@@ -24,6 +26,10 @@ public class Cartao {
 	@NotNull @Column(nullable = false)
 	private LocalDateTime emitidoEm;
 	
+	@Enumerated(EnumType.STRING)
+	@Column(columnDefinition = "VARCHAR(9) default 'ATIVO'")
+	private Situacao situacao = Situacao.ATIVO;
+	
 	/**
 	 * @Deprecated - único para hibernate
 	 */
@@ -37,5 +43,17 @@ public class Cartao {
 	
 	public String getNumero() {
 		return numero;
+	}
+
+	public boolean podeBloquear() {
+		return isAtivo();
+	}
+	
+	public void bloqueia() {
+		situacao = Situacao.BLOQUEADO;
+	}
+	
+	private boolean isAtivo() {
+		return situacao.equals(Situacao.ATIVO);
 	}
 }
