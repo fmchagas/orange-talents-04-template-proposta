@@ -61,6 +61,7 @@ services:
       KEYCLOAK_USER: admin
       KEYCLOAK_PASSWORD: Pa55w0rd
       POSTGRES_PORT_5432_TCP_ADDR: 127.0.0.1
+      TZ: America/Manaus
 
   analise:
     image: 'zupacademy/analise-financeira'
@@ -162,6 +163,8 @@ services:
       - BD_PWD=root
       - SOLICITACAO_URL=http://analise:9999
       - CARTAO_URL=http://contas:8888/api/cartoes
+      - ISSUER_URI=http://host.docker.internal:18080/auth/realms/proposta
+      - JWKS_URI=http://host.docker.internal:18080/auth/realms/proposta/protocol/openid-connect/certs
     depends_on:
       - mysql_proposta
       - analise
