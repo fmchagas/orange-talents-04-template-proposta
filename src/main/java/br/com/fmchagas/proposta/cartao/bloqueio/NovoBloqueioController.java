@@ -14,23 +14,23 @@ import org.springframework.web.server.ResponseStatusException;
 
 import br.com.fmchagas.proposta.cartao.Cartao;
 import br.com.fmchagas.proposta.cartao.CartaoRepository;
-import br.com.fmchagas.proposta.cliente_externo.cartao.CartaoCliente;
 
-@RestController
+@RestController // total pts 7
 public class NovoBloqueioController {
 	
 	private CartaoRepository cartaoRepository;
 	private BloqueiRepository bloqueiRepository;
-	private CartaoCliente cartaoCliente;
+	private EnviaBloqueioComFeign bloqueio;
 	
 	
 	@Autowired
 	public NovoBloqueioController(CartaoRepository cartaoRepository, 
 			BloqueiRepository bloqueiRepository,
-			CartaoCliente cartaoCliente) {
+			EnviaBloqueioComFeign bloqueio) {
+		
 		this.cartaoRepository = cartaoRepository;
 		this.bloqueiRepository = bloqueiRepository;
-		this.cartaoCliente = cartaoCliente;
+		this.bloqueio = bloqueio;
 	}
 	
 	@PostMapping("/api/cartoes/{id}/bloqueios")
@@ -45,21 +45,16 @@ public class NovoBloqueioController {
 		Cartao cartao = possivelCartao.get();
 		
 		if(!cartao.podeBloquear()) {
-			throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Cartão já esta bloqueado");
+			throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Cartão já está bloqueado");
 		}
 		
-		boolean fezBoqueio = new EnviaBloqueioComFeign(cartao, cartaoCliente).enviarBloqueiro();
+		bloqueio.enviar(cartao);
 		
-		if (fezBoqueio) {
-			Bloqueio bloqueio = new NovoBloqueioRequest().toModel(httpServletRequest, cartao);
-			cartao.bloqueia();
-			
-			bloqueiRepository.save(bloqueio);
-			
-			return new ResponseEntity<>(HttpStatus.OK);
-		}
+		Bloqueio bloqueio = new NovoBloqueioRequest().toModel(httpServletRequest, cartao);
+		cartao.bloqueia();
 		
-		throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Não conseguimos processar o bloqueio do cartão");
+		bloqueiRepository.save(bloqueio);
+		
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
-	
 }
