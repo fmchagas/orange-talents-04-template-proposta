@@ -17,4 +17,7 @@ public interface CartaoCliente {
 	
 	@PostMapping("/{id}/bloqueios")
 	void bloquearViaHttp(@PathVariable String id, @RequestBody @Valid CartaoClienteNovoBloqueioRequest request);
+	
+	@PostMapping("/{id}/avisos")
+	void avisoViagemViaHttp(@PathVariable String id, @RequestBody @Valid CartaoClienteNovoAvisoViagemRequest request);
 }

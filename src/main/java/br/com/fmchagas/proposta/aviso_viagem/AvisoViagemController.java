@@ -17,19 +17,25 @@ import org.springframework.web.server.ResponseStatusException;
 
 import br.com.fmchagas.proposta.cartao.Cartao;
 import br.com.fmchagas.proposta.cartao.CartaoRepository;
+import br.com.fmchagas.proposta.cliente_externo.cartao.CartaoCliente;
+import br.com.fmchagas.proposta.cliente_externo.cartao.CartaoClienteNovoAvisoViagemRequest;
+import feign.FeignException;
 
 @RestController
 public class AvisoViagemController {
 	
 	private CartaoRepository cartaoRepository;
 	private AvisoViagemRepository viagemRepository;
+	private CartaoCliente cartaoCliene;
 	
 	@Autowired
 	public AvisoViagemController(CartaoRepository cartaoRepository,
-			AvisoViagemRepository viagemRepository) {
+			AvisoViagemRepository viagemRepository,
+			CartaoCliente cartaoCliene) {
 		
 		this.cartaoRepository = cartaoRepository;
 		this.viagemRepository = viagemRepository;
+		this.cartaoCliene = cartaoCliene;
 	}
 	
 	@PostMapping("/api/cartoes/{id}/avisos")
@@ -45,9 +51,16 @@ public class AvisoViagemController {
 		
 		@NotNull Cartao cartao = possivelCartao.get();
 		
-		AvisoViagem avisoViagem = request.toModel(httpServletRequest, cartao);
-		viagemRepository.save(avisoViagem);
-		
-		return new ResponseEntity<>(HttpStatus.OK);
+		try {
+			cartaoCliene.avisoViagemViaHttp(cartao.getNumero(), new CartaoClienteNovoAvisoViagemRequest(request.getDestino(), request.getValidoAte()));
+			
+			AvisoViagem avisoViagem = request.toModel(httpServletRequest, cartao);
+			viagemRepository.save(avisoViagem);
+			
+			return new ResponseEntity<>(HttpStatus.OK);
+			
+		}catch(FeignException ex) {
+			throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "Desculpe o transtorno, não conseguimos processar o aviso de viagem");
+		}
 	}
 }

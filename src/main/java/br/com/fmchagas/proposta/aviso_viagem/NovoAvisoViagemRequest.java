@@ -41,4 +41,12 @@ public class NovoAvisoViagemRequest {
 		
 		return new AvisoViagem(destino, validoAte, cartao, ip, userAgent);
 	}
+	
+	public String getDestino() {
+		return destino;
+	}
+	
+	public LocalDate getValidoAte() {
+		return validoAte;
+	}
 }
