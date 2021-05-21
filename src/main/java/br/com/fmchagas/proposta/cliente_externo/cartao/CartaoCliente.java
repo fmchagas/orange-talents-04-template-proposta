@@ -20,4 +20,7 @@ public interface CartaoCliente {
 	
 	@PostMapping("/{id}/avisos")
 	void avisoViagemViaHttp(@PathVariable String id, @RequestBody @Valid CartaoClienteNovoAvisoViagemRequest request);
+	
+	@PostMapping("/{id}/carteiras")
+	void associaCarteiraViaHttp(@PathVariable String id, @RequestBody @Valid CartaoClienteCarteiraRequest request);
 }
