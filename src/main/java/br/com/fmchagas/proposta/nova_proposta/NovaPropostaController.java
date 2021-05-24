@@ -15,6 +15,8 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import br.com.fmchagas.proposta.metricas.ContadorDeProposta;
+import io.opentracing.Span;
+import io.opentracing.Tracer;
 
 @RestController //total 5 pts
 public class NovaPropostaController {
@@ -22,18 +24,25 @@ public class NovaPropostaController {
 	private PropostaRepository propostaRepository;
 	private ElegibilidadeNovaProposta elegibilidade;
 	private ContadorDeProposta metrica;
+	private Tracer tracer;
 	
 	@Autowired
 	public NovaPropostaController(PropostaRepository propostaRepository, 
 			ElegibilidadeNovaProposta elegibilidade,
-			ContadorDeProposta metrica) {
+			ContadorDeProposta metrica, Tracer tracer) {
+		
 		this.propostaRepository = propostaRepository;
 		this.elegibilidade = elegibilidade;
 		this.metrica = metrica;
+		this.tracer = tracer;
 	}
 	
 	@PostMapping("/api/propostas")
 	public ResponseEntity<?> cadastrar(@RequestBody @Valid NovaPropostaRequest request, UriComponentsBuilder uriBuilder) {
+		Span activeSpan = tracer.activeSpan();
+		activeSpan.setTag("tag.nome", "api.propostas");
+		activeSpan.setBaggageItem("bad.nome", "api.propostas");
+		
 		boolean existeProposta = propostaRepository.existsByDocumento(request.getDocumento());
 		
 		if(existeProposta) {
