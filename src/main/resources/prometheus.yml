@@ -1,0 +1,12 @@
+global:
+  scrape_interval: 15s # Por padrão, scrape alvos a cada 15 segundos.
+  evaluation_interval: 15s
+  
+# conf. Prometheus
+scrape_configs:    
+  - job_name: 'prometheus_prod'
+    # Substitui o padrão global, scrape alvo a cada 5 segundos.
+    scrape_interval: 5s
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['host.docker.internal:8080']

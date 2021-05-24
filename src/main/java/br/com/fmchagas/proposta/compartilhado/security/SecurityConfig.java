@@ -15,6 +15,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	protected void configure(HttpSecurity http) throws Exception {
 		http.cors().and()
 			.authorizeRequests()
+			 	.antMatchers("/actuator/prometheus").permitAll()
 				.antMatchers(HttpMethod.GET, "/api/propostas/*").hasAuthority("SCOPE_proposta")
 				.antMatchers(HttpMethod.POST, "/api/propostas").hasAuthority("SCOPE_proposta")
 				.antMatchers(HttpMethod.POST, "/api/cartoes/**").hasAuthority("SCOPE_proposta")
