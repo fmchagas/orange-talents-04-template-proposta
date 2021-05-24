@@ -5,6 +5,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 import java.math.BigDecimal;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -20,6 +21,7 @@ import org.springframework.util.Assert;
 import com.sun.istack.NotNull;
 
 import br.com.fmchagas.proposta.cartao.Cartao;
+import br.com.fmchagas.proposta.compartilhado.utils.CriptografiaParaBancoDeDados;
 
 
 @Entity
@@ -29,7 +31,8 @@ public class Proposta {
 	@GeneratedValue(strategy = IDENTITY)
 	private Long id;
 	
-	@Column(length = 14, unique = true, nullable = false)
+	@Convert(converter = CriptografiaParaBancoDeDados.class)
+	@Column(length = 64, unique = true, nullable = false)
 	private @NotBlank String documento;
 	
 	@Column(nullable = false)

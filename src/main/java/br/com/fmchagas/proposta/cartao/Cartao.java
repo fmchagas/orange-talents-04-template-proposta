@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -18,6 +19,7 @@ import javax.validation.constraints.NotNull;
 import org.springframework.util.Assert;
 
 import br.com.fmchagas.proposta.carteira.Carteira;
+import br.com.fmchagas.proposta.compartilhado.utils.CriptografiaParaBancoDeDados;
 
 @Entity
 public class Cartao {
@@ -26,8 +28,8 @@ public class Cartao {
 	@GeneratedValue(strategy = IDENTITY)
 	private Long id;
 
-	@NotBlank
-	@Column(length = 19, nullable = false)
+	@NotBlank @Convert(converter = CriptografiaParaBancoDeDados.class)
+	@Column(length = 64, nullable = false)
 	private String numero;
 
 	@NotNull
