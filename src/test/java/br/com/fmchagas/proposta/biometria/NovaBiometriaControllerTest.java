@@ -1,6 +1,7 @@
 package br.com.fmchagas.proposta.biometria;
 
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -40,6 +42,7 @@ class NovaBiometriaControllerTest {
 		try {
 			mockMvc.perform(post("/api/cartoes/{id}/biometria", 1L)
 					.content(json)
+					.with(jwt().authorities(new SimpleGrantedAuthority("SCOPE_proposta")))
 					.contentType("application/json"))
 					.andExpect(status().isNotFound());
 			
@@ -55,6 +58,7 @@ class NovaBiometriaControllerTest {
 
 		try {
 			mockMvc.perform(post("/api/cartoes/{id}/biometria", 1L)
+					.with(jwt().authorities(new SimpleGrantedAuthority("SCOPE_proposta")))
 					.content(json)
 					.contentType("application/json"))
 					.andExpect(status().isBadRequest());
@@ -76,6 +80,7 @@ class NovaBiometriaControllerTest {
 
 		try {
 			mockMvc.perform(post("/api/cartoes/{id}/biometria", 1L)
+					.with(jwt().authorities(new SimpleGrantedAuthority("SCOPE_proposta")))
 					.content(json)
 					.contentType("application/json"))
 					.andExpect(status().isCreated());
